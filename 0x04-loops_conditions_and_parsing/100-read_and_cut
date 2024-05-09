@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Bash script to display user information from /etc/passwd
+
+# Use while loop to read each line of /etc/passwd
+while IFS=: read -r username _ uid _ _ home _; do
+    # Print username, user id, and home directory path
+    echo "Username: $username"
+    echo "User ID: $uid"
+    echo "Home Directory: $home"
+done < /etc/passwd

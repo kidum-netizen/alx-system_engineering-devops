@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Use the while loop to read each line of /etc/passwd
+while IFS=: read -r username _ userid _ groupid _ user_info home_directory command_shell; do
+    # Extract additional user information from /etc/passwd
+    read -r _ _ _ _ _ password _ <<< "$(grep "^$username:" /etc/shadow)"
+
+    # Print the formatted output
+    echo "The user $username is part of the $groupid gang, lives in $home_directory and rides $command_shell. USER ID's place is protected by the passcode $password, more info about the user here: $user_info"
+done < /etc/passwd
