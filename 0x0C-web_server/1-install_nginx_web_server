@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
-#Install nginx web server
-sudo apt-get update && sudo apt-get install nginx
-
-# Start nginx service
+# Installs, configures, and starts the server
+# Imanol Asolo
+sudo apt-get update
+sudo apt-get install -y nginx
+sudo chown -R ubuntu /var/www
+echo "Hello World" > /var/www/html/index.nginx-debian.html
 sudo service nginx start
-
-# Create index.html with "Hello World!"
-sudo touch /var/www/html/index.html
-
-echo "Hello World!" | sudo tee /var/www/html/index.html
-
-# Restart Nginx to apply changes
-sudo service nginx restart
