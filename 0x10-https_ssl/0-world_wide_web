@@ -1,22 +1,36 @@
 #!/usr/bin/env bash
-# Script that outputs the subdomain, record type and destination
+# Querying
 
-func_A () {
-	dig "$1" | grep -A1 "ANSWER SECTION" | awk "/$1/ {print \$4}"
+# Query and get the ip address of n A record
+function get_result()
+{
+	result=$(dig "$1" | grep -A1 'ANSWER SECTION:' | awk '!/^;;/{print $5}')
+	echo "$result"
 }
 
-func_IP () {
-	dig "$1" | grep -A1 "ANSWER SECTION" | awk "/$1/ {print \$5}"
-}
 
 if [ $# -eq 1 ]; then
-	my_array=("www" "lb-01" "web-01" "web-02")
-	for sub in "${my_array[@]}"
-	do
-		url="$sub.$1"
-		echo "The subdomain $sub is a $(func_A "$url") record and points to $(func_IP "$url")"
-	done
-elif [ $# -gt 1 ]; then
-	url="$2.$1"
-	echo "The subdomain $2 is a $(func_A "$url") record and points to $(func_IP "$url")"
+	www=$(get_result "www.$1")
+	if [ -n "$www" ]; then
+		printf "The subdomain www is a A record and points to %s\n" "$www";
+	fi
+
+	lb01=$(get_result "lb-01.$1")
+	if [ -n "$lb01" ]; then
+		printf "The subdomain lb-01 is a A record and points to %s\n" "$lb01";
+	fi
+
+	web01=$(get_result "web-01.$1")
+	if [ -n "$web01" ]; then
+		printf "The subdomain web-01 is a A record and points to %s\n" "$web01";
+	fi
+
+	web02=$(get_result "web-02.$1")
+	if [ -n "$web02" ]; then
+		printf "The subdomain web-02 is a A record and points to %s\n" "$web02";
+	fi
+fi
+
+if [ $# -gt 1 ]; then
+	printf "The subdomain $2 is a A record and points to %s\n" "$(get_result "$2.$1")"
 fi
